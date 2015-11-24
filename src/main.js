@@ -95,7 +95,15 @@ export default class {
          * @type {Array}
          */
         links: [
-        ]
+        ],
+
+        /**
+         * 调试模式
+         *
+         * @description 开启后不使用缓存
+         * @type {Boolean}
+         */
+        debug: false
     }
 
     /**
@@ -142,14 +150,22 @@ export default class {
 
         uri = decodeURIComponent(uri);
 
-        let filter = (filepath) => {
+        let filter = (filepath, type) => {
             if (!uri) {
                 return false;
             }
 
-            if (uri.indexOf(filepath) === 0) {
-                return true;
+            if (type === 'dir') {
+                if (uri.indexOf(filepath + '/') === 0) {
+                    return true;
+                }
             }
+            else if (type === 'file') {
+                if (uri === filepath) {
+                    return true;
+                }
+            }
+
             return false;
         };
 
@@ -158,7 +174,7 @@ export default class {
 
             res.forEach((val) => {
                 if (!val.children || !val.children.length) {
-                    if (filter(val.uri)) {
+                    if (filter(val.uri, 'file')) {
                         html += `<li class="nav-tree-file nav-tree-current">`;
                     }
                     else {
@@ -174,7 +190,7 @@ export default class {
                     `;
                 }
                 else {
-                    if (filter(val.uri)) {
+                    if (filter(val.uri, 'dir')) {
                         html += `<li class="nav-tree-dir nav-tree-dir-open">`;
                     }
                     else {
@@ -220,15 +236,20 @@ export default class {
      * @return {Array} 数组
      */
     get_list() {
-        // 优化读取缓存
-        let cache = new Key_cache({
-            dir: this.options.cache_path
-        });
-        let nav_data = cache.get('nav_data');
+        let cache;
 
-        // 如果缓存存在
-        if (nav_data) {
-            return nav_data;
+        // 必须关闭调试模式才读取缓存
+        if (!this.options.debug) {
+            // 优化读取缓存
+            cache = new Key_cache({
+                dir: this.options.cache_path
+            });
+            let nav_data = cache.get('nav_data');
+
+            // 如果缓存存在
+            if (nav_data) {
+                return nav_data;
+            }
         }
 
         let data = this._get_list();
@@ -249,10 +270,13 @@ export default class {
             });
         }
 
-        nav_data = data.children;
+        let nav_data = data.children;
 
-        // 写入缓存
-        cache.set('nav_data', nav_data);
+        // 如果没有调试则写入缓存
+        if (!this.options.debug  && cache && cache.set) {
+            cache.set('nav_data', nav_data);
+        }
+
         return nav_data;
     }
 
@@ -336,12 +360,6 @@ export default class {
     run() {
         let app = this.express = express();
 
-        app.get('/test', (req, res, next) => {
-            let data = this.get_list();
-
-            res.json(data);
-        });
-
         template.config('base', '');
         template.config('extname', '.html');
 
@@ -362,22 +380,27 @@ export default class {
 
         // 监听以目录结束的，其实是为了解决默认主页为md文档问题
         app.get(/(^\/$|\/$)/, (req, res, next) => {
-            let pathname = url.parse(req.url).pathname.substr(1);
+            // url中的文件路径
+            let pathname = url.parse(req.url).pathname;
 
+            // 相对文件的路径,用来判断文件是否存在
+            let filepath = decodeURIComponent('.' + pathname);
+
+            // 默认主页
             let default_index = [
                 'readme.md',
                 'README.md'
             ];
             let flag = false;
             for (let i = 0, len = default_index.length; i < len; i++) {
-                if (fs.existsSync(path.resolve(this.options.root, pathname, default_index[i]))) {
+                if (fs.existsSync(path.resolve(this.options.root, filepath, default_index[i]))) {
                     flag = default_index[i];
                     break;
                 }
             }
 
             if (flag) {
-                req.url += flag;
+                req.url = pathname + flag;
                 return this._md(req, res, next);
             }
 
@@ -464,9 +487,11 @@ export default class {
             return next();
         }
 
-        let filepath = decodeURIComponent(parseUrl.pathname.substr(1));
+        // 加.是为了变成相对路径
+        let filepath = path.resolve(this.options.root, '.' + parseUrl.pathname);
 
-        filepath = path.resolve(this.options.root, filepath);
+        // 为了中文
+        filepath = decodeURIComponent(filepath);
 
         // 如果md文件不存在
         if (!fs.existsSync(filepath)) {
