@@ -43,7 +43,7 @@ var app = new Mdjs(options);
 ```js
 'use strict';
 
-var Mdocjs = require('./');
+var Mdocjs = require('mdjs');
 
 new Mdocjs({});
 ```
