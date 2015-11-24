@@ -330,10 +330,8 @@ export default class {
 
             // 必须有语言且行数>=3
             if (lang && data.split(/\n/).length >= 3) {
-                return `
-                    <pre>
-                        <code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>${data}</code>
-                    </pre>`;
+                return `<pre>
+                    <code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>${data}</code></pre>`;
             }
 
             return `<pre><code class="hljs">${data}</code></pre>`;
