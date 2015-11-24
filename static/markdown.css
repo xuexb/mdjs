@@ -188,3 +188,8 @@
 .markdown-body del {
     color: #999;
 }
+
+/*兼容todo*/
+.markdown-body .ui-todo {
+    margin-right: 4px; 
+}
