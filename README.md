@@ -2,6 +2,8 @@
 
 一个纯洁的`md`文档在线浏览
 
+[在线文档](https://github.xuexb.com/mdjs/)
+
 ## 功能
 
 - [x] 目录导航自动抓取（递归抓取`options.root`目录下包含`.md`文件的非空目录）
