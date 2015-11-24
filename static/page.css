@@ -48,6 +48,8 @@ body {
             transition: left 0.4s;
     width: 260px;
     z-index: 10;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 #nav h2 {
@@ -143,7 +145,7 @@ body {
     left: 0;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
     #nav {
         left: -280px;
         opacity: 0.96;
