@@ -124,7 +124,15 @@ new Mdocjs({});
      * @type {Array}
      */
     links: [
-    ]
+    ],
+
+    /**
+     * 调试模式
+     *
+     * @description 开启后不使用缓存
+     * @type {Boolean}
+     */
+    debug: false
 }
 ```
 
