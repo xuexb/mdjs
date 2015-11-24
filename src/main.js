@@ -304,7 +304,7 @@ export default class {
         renderer.code = (data, lang) => {
             data = highlight.highlightAuto(data).value;
 
-            // 必须有语言且行数>=2
+            // 必须有语言且行数>=3
             if (lang && data.split(/\n/).length >= 3) {
                 return `
                     <pre>
