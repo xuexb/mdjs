@@ -14,7 +14,7 @@ module.exports = {
         args.unshift(__dirname, './temp/');
         return path.resolve.apply(path, args);
     },
-    doc: function (name) {
+    doc: function () {
         var args = Array.prototype.slice.call(arguments);
         args.unshift(__dirname, './doc/');
         return path.resolve.apply(path, args);

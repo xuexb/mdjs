@@ -47,7 +47,7 @@ describe('options', function () {
         });
     });
 
-    it('options.root', function(){
+    it('options.root', function () {
         var app = new Mdjs({
             root: getpath.__dirname
         });
@@ -56,10 +56,10 @@ describe('options', function () {
         app._md({
             url: '/doc/ok.md'
         }, {
-            render: function(){
+            render: function () {
                 flag = true;
             }
-        }, function(){});
+        }, function () {});
 
         assert.strictEqual(true, flag);
     });
@@ -90,7 +90,7 @@ describe('options', function () {
         }
     });
 
-    it('options.ignore_dir', function(){
+    it('options.ignore_dir', function () {
         var app = new Mdjs({
             root: getpath.doc('ignore_dir'),
             ignore_dir: [
@@ -103,7 +103,7 @@ describe('options', function () {
         assert.strictEqual(1, data.children.length);
     });
 
-    it('options.links empty', function(){
+    it('options.links empty', function () {
         new Mdjs({
             links: ''
         });
@@ -115,7 +115,7 @@ describe('options', function () {
         });
     });
 
-    it('options.links - type default', function(){
+    it('options.links - type default', function () {
         var app = new Mdjs({
             root: getpath.__dirname,
             links: [
@@ -124,7 +124,6 @@ describe('options', function () {
                     url: 'https://xuexb.com/'
                 }
             ],
-
             // 这里是为了不使用缓存
             debug: true
         });
@@ -134,7 +133,7 @@ describe('options', function () {
         assert.deepEqual(app.options.links[0], data[0]);
     });
 
-    it('options.links - type after', function(){
+    it('options.links - type after', function () {
         var app = new Mdjs({
             root: getpath.__dirname,
             links: [
@@ -144,7 +143,6 @@ describe('options', function () {
                     type: 'after'
                 }
             ],
-
             // 这里是为了不使用缓存
             debug: true
         });
@@ -156,7 +154,7 @@ describe('options', function () {
         app.clear_cache();
     });
 
-    it('options.debug:true', function(){
+    it('options.debug:true', function () {
         var cache_path = getpath.temp('options.debug:true');
         var app = new Mdjs({
             root: path.resolve(__dirname),
@@ -171,7 +169,7 @@ describe('options', function () {
         assert.strictEqual(false, fs.existsSync(cache_path));
     });
 
-    it('options.debug:false', function(){
+    it('options.debug:false', function () {
         var cache_path = getpath.temp('options.debug:false');
         var app = new Mdjs({
             root: path.resolve(__dirname),
@@ -221,8 +219,8 @@ describe('options', function () {
         }
         catch (e) {
             assert.strictEqual(true, false);
-        } finally
-        {
+        }
+        finally {
             fs.writeFileSync(packpath, backdata);
         }
     });
@@ -237,15 +235,16 @@ describe('options', function () {
         // 清除require缓存
         delete require.cache[packpath];
 
-        try{
+        try {
             new Mdjs({
                 json: 'ok'
             });
             assert.strictEqual(true, true);
-        } catch(e){
+        }
+        catch (e) {
             assert.strictEqual(true, false);
-        } finally
-        {
+        }
+        finally {
             fs.writeFileSync(packpath, backdata);
         }
     });

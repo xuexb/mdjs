@@ -130,6 +130,10 @@ export default class Mdjs {
         // 缓存当前运行的目录
         this.__dirname = path.dirname(__dirname);
 
+        // 缓存express
+        this.express = express();
+
+        // 初始化express
         this._init_express();
     }
 
@@ -376,7 +380,7 @@ export default class Mdjs {
      * @private
      */
     _init_express() {
-        let app = this.express = express();
+        let app = this.express;
 
         template.config('base', '');
         template.config('extname', '.html');
@@ -398,8 +402,8 @@ export default class Mdjs {
 
         // 监听以目录结束的，其实是为了解决默认主页为md文档问题
         app.get(/(^\/$|\/$)/, (req, res, next) => {
-            // url中的文件路径
-            let pathname = url.parse(req.url).pathname;
+            let parseUrl = url.parse(req.url, true);
+            let pathname = parseUrl.pathname;
 
             // 相对文件的路径,用来判断文件是否存在
             let filepath = decodeURIComponent('.' + pathname);
@@ -418,7 +422,13 @@ export default class Mdjs {
             }
 
             if (flag) {
-                req.url = pathname + flag;
+                req.url = url.format({
+                    hash: parseUrl.hash,
+                    search: parseUrl.search,
+                    pathname: pathname + flag,
+                    query: parseUrl.query
+                });
+
                 return this._md(req, res, next);
             }
 
@@ -544,7 +554,7 @@ export default class Mdjs {
             let filedata = fs.readFileSync(filepath).toString();
 
             // 正则取出#标题的文字
-            if (filedata.match(/^\#+\s?(.+?)[\r\n]/)) {
+            if (filedata.match(/^\#+\s?(.+?)\b/)) {
                 return String(RegExp.$1).trim();
             }
         }

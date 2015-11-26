@@ -10,7 +10,6 @@ var Mdjs = require('../');
 var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
-var resquest = require('request');
 
 var getpath = require('./getpath');
 
@@ -27,7 +26,7 @@ describe('api', function () {
         }
     });
 
-    it('renderMarkdown()', function(){
+    it('renderMarkdown()', function () {
         var app = new Mdjs();
 
         assert.strictEqual('object', typeof app.renderMarkdown());
@@ -36,7 +35,7 @@ describe('api', function () {
         assert.strictEqual(0, app.renderMarkdown().catalog.length);
     });
 
-    it('renderMarkdown(str)', function(){
+    it('renderMarkdown(str)', function () {
         var app = new Mdjs();
         var filepath = getpath.doc('renderMarkdown(str)', '1.md');
         var filedata = fs.readFileSync(filepath).toString();
@@ -55,18 +54,29 @@ describe('api', function () {
         assert.strictEqual(true, data.content.indexOf('<pre><code class="hljs">') !== -1);
     });
 
-    it('get_render_nav() - empty', function(){
+    it('renderMarkdown(str) - todo', function () {
+        var app = new Mdjs();
+        var filepath = getpath.doc('renderMarkdown(str)', '1.md');
+        var filedata = fs.readFileSync(filepath).toString();
+        var data = app.renderMarkdown(filedata).content;
+
+        // todo支持验证
+        assert.strictEqual(true, data.indexOf('<li><input type="checkbox" class="ui-todo" disabled>') !== -1);
+        assert.strictEqual(true, data.indexOf('<li><input type="checkbox" disabled checked class="ui-todo">') !== -1);
+    });
+
+    it('get_render_nav() - empty', function () {
         var app = new Mdjs();
 
         // 重写方法使其没数据
-        app.get_list = function(){
+        app.get_list = function () {
             return [];
         };
 
         assert.strictEqual('', app.get_render_nav());
     });
 
-    it('get_render_nav()', function(){
+    it('get_render_nav()', function () {
         var app = new Mdjs({
             root: getpath.__dirname
         });
@@ -78,7 +88,7 @@ describe('api', function () {
         app.clear_cache();
     });
 
-    it('get_render_nav(uri)', function(){
+    it('get_render_nav(uri)', function () {
         var app = new Mdjs({
             root: getpath.__dirname
         });
@@ -95,7 +105,7 @@ describe('api', function () {
         app.clear_cache();
     });
 
-    it('clear_cache()', function(){
+    it('clear_cache()', function () {
         var cache_path = getpath.temp('clear_cache()');
         var app = new Mdjs({
             root: path.resolve(__dirname),
@@ -116,10 +126,10 @@ describe('api', function () {
         assert.strictEqual(true, fs.readdirSync(cache_path).length === 0);
     });
 
-    it('get_list() - empty', function(){
+    it('get_list() - empty', function () {
         var app = new Mdjs();
 
-        app._get_list = function(){
+        app._get_list = function () {
             return {};
         };
 

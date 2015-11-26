@@ -2,4 +2,6 @@
 
 var Mdocjs = require('./');
 
-new Mdocjs().clear_cache();
+new Mdocjs({
+    debug: true
+}).clear_cache().run();
