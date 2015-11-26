@@ -1,6 +1,6 @@
 {
     "name": "mdjs",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "description": "一个纯洁的md在线浏览",
     "main": "lib/main.js",
     "scripts": {
