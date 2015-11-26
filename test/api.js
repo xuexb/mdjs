@@ -26,7 +26,13 @@ describe('api', function () {
         }
     });
 
-    it('renderMarkdown()', function () {
+    it('run() => return', function () {
+        var app = new Mdjs();
+
+        assert.strictEqual(true, app === app.run());
+    });
+
+    it('renderMarkdown() => return', function () {
         var app = new Mdjs();
 
         assert.strictEqual('object', typeof app.renderMarkdown());
@@ -124,6 +130,12 @@ describe('api', function () {
 
         // 判断缓存目录里有没有文件
         assert.strictEqual(true, fs.readdirSync(cache_path).length === 0);
+    });
+
+    it('clear_cache() => return ', function () {
+        var app = new Mdjs();
+
+        assert.strictEqual(true, app === app.clear_cache());
     });
 
     it('get_list() - empty', function () {
