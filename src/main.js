@@ -21,8 +21,8 @@ import Key_cache from 'key-cache';
 import marked from 'marked';
 import highlight from 'highlight.js';
 
-export default class {
-    options = {
+export default class Mdjs {
+    static options = {
         /**
          * 文档名
          *
@@ -122,7 +122,7 @@ export default class {
 
         // 合并默认配置
         // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
-        options = this.options = extend({}, this.options, package_options, options);
+        options = this.options = extend({}, Mdjs.options, package_options, options);
 
         options.root = path.resolve('./', options.root);
         options.cache_path = path.resolve('./', options.cache_path);
@@ -130,7 +130,7 @@ export default class {
         // 缓存当前运行的目录
         this.__dirname = path.dirname(__dirname);
 
-        this.run();
+        this._init_express();
     }
 
     /**
@@ -148,7 +148,9 @@ export default class {
             return str;
         }
 
-        uri = decodeURIComponent(uri);
+        if (uri) {
+            uri = decodeURIComponent(uri);
+        }
 
         let filter = (filepath, type) => {
             if (!uri) {
@@ -328,10 +330,16 @@ export default class {
         renderer.code = (data, lang) => {
             data = highlight.highlightAuto(data).value;
 
-            // 必须有语言且行数>=3
-            if (lang && data.split(/\n/).length >= 3) {
-                let html = `<pre><code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>`;
-                return html + `${data}</code></pre>`;
+            // 有语言时
+            if (lang) {
+
+                // 超过3行有提示
+                if (data.split(/\n/).length >= 3) {
+                    let html = `<pre><code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>`;
+                    return html + `${data}</code></pre>`;
+                }
+
+                return `<pre><code class="hljs lang-${lang}">${data}</code></pre>`;
             }
 
             return `<pre><code class="hljs">${data}</code></pre>`;
@@ -354,8 +362,20 @@ export default class {
 
     /**
      * 运行
+     *
+     * @return {Object} this
      */
     run() {
+        this.express.listen(this.options.port);
+        return this;
+    }
+
+    /**
+     * 初始化express
+     *
+     * @private
+     */
+    _init_express() {
         let app = this.express = express();
 
         template.config('base', '');
@@ -365,7 +385,7 @@ export default class {
         app.set('views', path.resolve(this.__dirname, './views/'));
         app.set('view engine', 'html');
 
-        // 解析md，解决中文路径问题
+        // 写入变量
         app.use((req, res, next) => {
             // 写入变量
             res.locals.options = this.options;
@@ -410,8 +430,6 @@ export default class {
 
         // 委托源目录
         app.use('/', serve_static(this.options.root));
-
-        app.listen(this.options.port);
     }
 
     /**

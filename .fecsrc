@@ -7,9 +7,6 @@
 
         "rules": {
             "fecs-camelcase": [2, {"ignore": ["/_/"]}]
-        },
-        "globals": {
-            "think": true
         }
     }
 }

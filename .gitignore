@@ -30,4 +30,4 @@ node_modules
 # xiaowu
 /lib/
 /.cache/
-
+/test/temp/
