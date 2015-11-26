@@ -48,6 +48,14 @@ describe('base', function () {
         assert.strictEqual('title', title);
     });
 
+    it('_get_md_title .md 中文', function () {
+        var filepath = getpath.doc('default index', 'readme.md');
+
+        var title = new Mdjs()._get_md_title(filepath);
+
+        assert.strictEqual('默认主页', title);
+    });
+
     // 获取md标题
     it('_get_md_title .md empty', function () {
         var filepath = getpath.doc('ok.md');
@@ -58,7 +66,7 @@ describe('base', function () {
     });
 
     // 获取md标题
-    it('_get_md_title .md empty', function () {
+    it('_get_md_title .md 行单标题', function () {
         var filepath = getpath.doc('ok2.md');
 
         var title = new Mdjs()._get_md_title(filepath);
