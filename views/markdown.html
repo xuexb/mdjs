@@ -16,11 +16,13 @@
 </head>
 <body>
     <div class="progress-indicator-2"></div>
-    <div id="nav-mini">目录</div>
+    <div id="nav-mini"><i class="iconfont">&#xe653;</i></div>
     <div id="nav">
-        <h2><%=options.name%></h2>
-        <div id="nav-tree">
-            <%=#nav_data%>
+        <div class="nav-inner">
+            <h2><%=options.name%></h2>
+            <div id="nav-tree">
+                <%=#nav_data%>
+            </div>
         </div>
     </div>
     <div id="content">
@@ -109,8 +111,14 @@
                 }
             });
 
+            // 支持mini版
             $('#nav-mini').on('click', function(){
                 $('#nav').toggleClass('nav-show');
+            });
+            $('#nav').on('click', '.nav-tree-file-a', function(){
+                if ($('#nav-mini').is(':visible')) {
+                    $('#nav').removeClass('nav-show');
+                }
             });
         });
     </script>

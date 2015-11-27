@@ -41,7 +41,6 @@ body {
     height: 100%;
     overflow: -moz-scrollbars-vertical;
     overflow: auto;
-    padding: 15px;
     position: fixed;
     -webkit-transition: left 0.4s;
          -o-transition: left 0.4s;
@@ -52,6 +51,9 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+.nav-inner{
+    margin: 15px; 
+}
 #nav h2 {
     font-size: 21px; 
     margin-top: 15px;
@@ -147,20 +149,28 @@ body {
 
 @media (max-width: 600px) {
     #nav {
-        left: -280px;
+        left: -300px;
         opacity: 0.96;
     }
     #nav-mini {
-        background-color: #ccc;
         display: block;
+        right: 10px; 
+        bottom: 10px; 
         height: 50px;
-        left: 0;
-        line-height: 50px;
         position: fixed;
         text-align: center;
-        top: 0;
         width: 50px;
         z-index: 11;
+
+        border-radius: 15px;
+        background-color: #333;
+        opacity: .9;
+
+        font-size: 30px; 
+        color: #fff; 
+    }
+    #nav-mini .iconfont{
+        font-size: 30px; 
     }
     #content {
         padding-left: 0;
