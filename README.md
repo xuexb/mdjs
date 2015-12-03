@@ -20,6 +20,8 @@
 
 ## 安装
 
+> `nodejs 0.12+`
+
 ```bash
 npm install mdjs --save
 ```

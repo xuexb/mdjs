@@ -42,5 +42,8 @@
         "marked",
         "md",
         "markdown-web"
-    ]
+    ],
+    "engines": {
+        "node": ">= 0.12.0"
+    }
 }
