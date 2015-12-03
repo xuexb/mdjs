@@ -123,8 +123,8 @@ export default class Mdjs {
         // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
         options = this.options = Object.assign({}, Mdjs.options, package_options, options);
 
-        options.root = path.resolve('./', options.root);
-        options.cache_path = path.resolve('./', options.cache_path);
+        options.root = path.resolve(options.root);
+        options.cache_path = path.resolve(options.cache_path);
 
         // 缓存当前运行的目录
         this.__dirname = path.dirname(__dirname);
