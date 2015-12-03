@@ -470,6 +470,11 @@ export default class Mdjs {
             text: options.dir_alias[basename] || basename
         };
 
+        // 如果目录不存在
+        if (!fs.existsSync(dir)) {
+            return result;
+        }
+
         let data = fs.readdirSync(dir);
 
         data.forEach(file => {
