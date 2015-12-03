@@ -207,6 +207,17 @@ describe('base', function () {
         assert.strictEqual(1, data.children.length);
     });
 
+    it('_get_list 不存在目录', function(){
+        var filepath = getpath.doc('空空空' + Date.now());
+        var app = new Mdjs({
+            debug: true,
+            root: filepath
+        });
+
+
+        assert.strictEqual(0, app.get_list().length);
+    });
+
     it('locals', function () {
         var app = new Mdjs({
             port: 8394,
