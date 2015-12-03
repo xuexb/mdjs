@@ -15,21 +15,23 @@ var getpath = require('./getpath');
 
 describe('api', function () {
     // 运行2个，当第2个占用端口时表示成功
-    it('run', function () {
-        try {
-            new Mdjs().run();
-            new Mdjs().run();
-            assert.strictEqual(true, false);
-        }
-        catch (e) {
-            assert.strictEqual(true, true);
-        }
-    });
+    describe('run', function () {
+        it('启动状态', function () {
+            try {
+                new Mdjs().run();
+                new Mdjs().run();
+                assert.strictEqual(true, false);
+            }
+            catch (e) {
+                assert.strictEqual(true, true);
+            }
+        });
 
-    it('run() => return', function () {
-        var app = new Mdjs();
+        it('返回值', function () {
+            var app = new Mdjs();
 
-        assert.strictEqual(true, app === app.run());
+            assert.strictEqual(true, app === app.run());
+        });
     });
 
     // 缓存方法判断
