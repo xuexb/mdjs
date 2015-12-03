@@ -1,8 +1,8 @@
 'use strict';
 
-var Mdocjs = require('./');
+var Mdjs = require('./');
 
-new Mdocjs({
+new Mdjs({
     static_prefix: 'test',
     debug: true
 }).clear_cache().run();
