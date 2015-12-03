@@ -5,7 +5,7 @@
     "main": "lib/main.js",
     "scripts": {
         "check": "fecs check src/ test/",
-        "compile": "babel --loose all --stage 0 --modules common src/ --out-dir lib/",
+        "compile": "babel --optional runtime --loose all --stage 0 --modules common src/ --out-dir lib/",
         "watch": "npm run compile -- --watch",
         "start": "node test.js",
         "prepublish": "npm run compile",
@@ -25,11 +25,11 @@
     "dependencies": {
         "art-template": "^3.0.3",
         "express": "^4.13.3",
-        "extend": "^3.0.0",
         "highlight.js": "^8.9.1",
         "key-cache": "0.x.x",
         "marked": "^0.3.5",
-        "serve-static": "^1.10.0"
+        "serve-static": "^1.10.0",
+        "babel-runtime": "^5.8.20"
     },
     "devDependencies": {
         "babel": "5.8.21",

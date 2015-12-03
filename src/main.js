@@ -6,7 +6,6 @@
 
 'use strict';
 
-import extend from 'extend';
 import template from 'art-template/node/template-native';
 
 import express from 'express';
@@ -114,7 +113,7 @@ export default class Mdjs {
     constructor(options = {}) {
         let package_options;
         try {
-            package_options = require(path.resolve('./package.json')).mdjs || {};
+            package_options = require(path.resolve('./package.json')).mdjs;
         }
         catch (e) {
             package_options = {};
@@ -122,7 +121,7 @@ export default class Mdjs {
 
         // 合并默认配置
         // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
-        options = this.options = extend({}, Mdjs.options, package_options, options);
+        options = this.options = Object.assign({}, Mdjs.options, package_options, options);
 
         options.root = path.resolve('./', options.root);
         options.cache_path = path.resolve('./', options.cache_path);
