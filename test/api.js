@@ -47,7 +47,7 @@ describe('api', function () {
         var filedata = fs.readFileSync(filepath).toString();
         var data = app.renderMarkdown(filedata);
 
-        assert.strictEqual(2, data.catalog.length);
+        assert.strictEqual(4, data.catalog.length);
 
         // 语言验证
         assert.strictEqual(true, data.content.indexOf('<pre><code class="hljs lang-js">') !== -1);
@@ -99,12 +99,12 @@ describe('api', function () {
             root: getpath.__dirname
         });
 
-        var html = app.get_render_nav('/doc/ok.md');
+        var html = app.get_render_nav('/doc/get_render_nav/1.md');
         var data = html.match(/<li class=\"nav-tree-file nav-tree-current\">([\s\S]+?)<\/li>/);
         assert.strictEqual(true, !!data);
 
         if (data && data.length) {
-            assert.strictEqual(true, data[1].indexOf('/doc/ok.md') > -1);
+            assert.strictEqual(true, data[1].indexOf('/doc/get_render_nav/1.md') > -1);
         }
 
         // 清空缓存

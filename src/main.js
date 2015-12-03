@@ -161,17 +161,11 @@ export default class Mdjs {
             }
 
             if (type === 'dir') {
-                if (uri.indexOf(filepath + '/') === 0) {
-                    return true;
-                }
+                return uri.indexOf(filepath + '/') === 0;
             }
-            else if (type === 'file') {
-                if (uri === filepath) {
-                    return true;
-                }
+            else {
+                return uri === filepath;
             }
-
-            return false;
         };
 
         let fn = (res) => {
@@ -480,7 +474,7 @@ export default class Mdjs {
                     result.children.push(res);
                 }
             }
-            else if (stat.isFile()) {
+            else {
                 if (path.extname(file) !== '.md') {
                     return;
                 }

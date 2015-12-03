@@ -100,7 +100,7 @@ describe('options', function () {
 
         var data = app._get_list();
 
-        assert.strictEqual(1, data.children.length);
+        assert.strictEqual(2, data.children.length);
     });
 
     it('options.links empty', function () {
