@@ -32,6 +32,81 @@ describe('api', function () {
         assert.strictEqual(true, app === app.run());
     });
 
+    // 缓存方法判断
+    describe('cache', function () {
+        // 结束后清空缓存
+        afterEach(function () {
+            new Mdjs().clear_cache();
+        });
+
+        it('()', function () {
+            var app = new Mdjs();
+
+            assert.strictEqual(undefined, app.cache());
+        });
+
+        it('(key)   无缓存', function () {
+            var app = new Mdjs();
+
+            assert.strictEqual(undefined, app.cache('不存在'));
+        });
+
+        it('(key)   有缓存', function () {
+            var app = new Mdjs();
+
+            app.cache('存在', function () {
+                return true;
+            });
+
+            assert.strictEqual(true, app.cache('存在'));
+        });
+
+        it('(key)   options.debug:true', function () {
+            var app = new Mdjs({
+                debug: true
+            });
+
+            assert.strictEqual(undefined, app.cache('不存在'));
+        });
+
+        it('(key, fn)    无缓存', function () {
+            var app = new Mdjs();
+
+            var flag;
+
+            // 判断是否执行回调
+            app.cache('xxoo', function () {
+                flag = true;
+            });
+            assert.strictEqual(true, flag);
+
+            // 判断上面回调没返回值，则不写入缓存
+            flag = app.cache('xxoo', function () {
+                return 1;
+            });
+            assert.strictEqual(1, 1);
+        });
+
+        it('(key, fn)    有缓存', function () {
+            var app = new Mdjs();
+
+            // 当没有缓存时读获取回调返回值
+            var flag = app.cache('xxoo', function () {
+                return true;
+            });
+            assert.strictEqual(true, flag);
+
+            // 理论上有缓存就不执行回调
+            app.cache('xxoo', function () {
+                flag = 0;
+            });
+            assert.strictEqual(true, flag !== 0);
+
+            // 有缓存
+            assert.strictEqual(true, app.cache('xxoo'));
+        });
+    });
+
     it('renderMarkdown() => return', function () {
         var app = new Mdjs();
 

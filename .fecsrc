@@ -6,7 +6,8 @@
         },
 
         "rules": {
-            "fecs-camelcase": [2, {"ignore": ["/_/"]}]
+            "fecs-camelcase": [2, {"ignore": ["/_/"]}],
+            "max-nested-callbacks": [1, 5]
         }
     }
 }

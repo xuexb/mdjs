@@ -163,9 +163,7 @@ export default class Mdjs {
             if (type === 'dir') {
                 return uri.indexOf(filepath + '/') === 0;
             }
-            else {
-                return uri === filepath;
-            }
+            return uri === filepath;
         };
 
         let fn = (res) => {
@@ -219,11 +217,10 @@ export default class Mdjs {
      * @return {Object} this
      */
     clear_cache() {
-        let cache = new Key_cache({
+        // 调用缓存对象清空缓存
+        new Key_cache({
             dir: this.options.cache_path
-        });
-
-        cache.remove();
+        }).remove();
 
         return this;
     }
@@ -235,48 +232,27 @@ export default class Mdjs {
      * @return {Array} 数组
      */
     get_list() {
-        let cache;
+        return this.cache('nav_data', () => {
+            let data = this._get_list();
 
-        // 必须关闭调试模式才读取缓存
-        if (!this.options.debug) {
-            // 优化读取缓存
-            cache = new Key_cache({
-                dir: this.options.cache_path
-            });
-            let nav_data = cache.get('nav_data');
-
-            // 如果缓存存在
-            if (nav_data) {
-                return nav_data;
+            if (!data.children) {
+                data.children = [];
             }
-        }
 
-        let data = this._get_list();
+            // 如果有链接，则追加
+            if (this.options.links && this.options.links.length) {
+                this.options.links.forEach(val => {
+                    if (val.type === 'after') {
+                        data.children.push(val);
+                    }
+                    else {
+                        data.children.unshift(val);
+                    }
+                });
+            }
 
-        if (!data.children) {
-            data.children = [];
-        }
-
-        // 如果有链接，则追加
-        if (this.options.links && this.options.links.length) {
-            this.options.links.forEach(val => {
-                if (val.type === 'after') {
-                    data.children.push(val);
-                }
-                else {
-                    data.children.unshift(val);
-                }
-            });
-        }
-
-        let nav_data = data.children;
-
-        // 如果没有调试则写入缓存
-        if (!this.options.debug  && cache && cache.set) {
-            cache.set('nav_data', nav_data);
-        }
-
-        return nav_data;
+            return data.children;
+        });
     }
 
     /**
@@ -365,6 +341,43 @@ export default class Mdjs {
     run() {
         this.express.listen(this.options.port);
         return this;
+    }
+
+    /**
+     * 缓存
+     *
+     * @description 如果开启了debug，则忽略缓存
+     * @param  {string}   key  缓存key
+     * @param {Function} fn 当没有缓存时执行的回调
+     * @return {Object|undefined} 缓存数据或者回调返回值
+     */
+    cache(key, fn = () => {}) {
+        // 如果没有key则返回空
+        if (!key) {
+            return undefined;
+        }
+
+        // 如果有debug
+        if (this.options.debug) {
+            return fn();
+        }
+
+        let cache = new Key_cache({
+            dir: this.options.cache_path
+        });
+        let value = cache.get(key);
+        if (value) {
+            return value;
+        }
+
+        value = fn();
+
+        // 如果不为空则设置缓存
+        if (value !== undefined) {
+            cache.set(key, value);    
+        }
+
+        return value;
     }
 
     /**
