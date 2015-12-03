@@ -306,7 +306,7 @@ export default class Mdjs {
                 return `<h${level}>${text}</h${level}>`;
             }
 
-            if (!cachekey[level]) {
+            if (cachekey[level] === undefined) {
                 cachekey[level] = 0;
             }
 
