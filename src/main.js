@@ -374,7 +374,7 @@ export default class Mdjs {
 
         // 如果不为空则设置缓存
         if (value !== undefined) {
-            cache.set(key, value);    
+            cache.set(key, value);
         }
 
         return value;
@@ -475,31 +475,49 @@ export default class Mdjs {
             return result;
         }
 
+        // 读取目录里数据
         let data = fs.readdirSync(dir);
 
+        // 定义目录数据和文件数据
+        let dir_data = [];
+        let file_data = [];
+
+        // 遍历数据，拿出目录、文件的数据
         data.forEach(file => {
             let filepath = path.resolve(dir, file);
             let stat = fs.statSync(filepath);
 
             if (stat.isDirectory()) {
-                if (options.ignore_dir && options.ignore_dir.indexOf(file) !== -1) {
-                    return;
+                if (options.ignore_dir && options.ignore_dir.indexOf(file) === -1) {
+                    dir_data.push({
+                        type: 'dir',
+                        filepath: filepath
+                    });
                 }
+            }
+            else {
+                if (path.extname(file) === '.md') {
+                    file_data.push({
+                        filepath: filepath
+                    });
+                }
+            }
+        });
 
-                let res = this._get_list(filepath);
+        // 合并目录+文件数据
+        dir_data.concat(file_data).forEach(file => {
+            if (file.type === 'dir') {
+                let res = this._get_list(file.filepath);
 
+                // 必须有子集才算
                 if (res.children && res.children.length) {
                     result.children.push(res);
                 }
             }
             else {
-                if (path.extname(file) !== '.md') {
-                    return;
-                }
-
                 result.children.push({
-                    text: this._get_md_title(dir + '/' + file),
-                    uri: (dir + '/' + file).replace(options.root, '')
+                    text: this._get_md_title(file.filepath),
+                    uri: file.filepath.replace(options.root, '')
                 });
             }
         });
