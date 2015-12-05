@@ -39,26 +39,25 @@ body {
        -moz-box-shadow: 0 0 40px #ccc;
             box-shadow: 0 0 40px #ccc;
     height: 100%;
-    overflow: -moz-scrollbars-vertical;
     overflow: auto;
+    overflow: -moz-scrollbars-vertical;
+    -webkit-overflow-scrolling: touch;
     position: fixed;
     -webkit-transition: left 0.4s;
          -o-transition: left 0.4s;
             transition: left 0.4s;
     width: 260px;
     z-index: 10;
-
-    -webkit-overflow-scrolling: touch;
 }
 
-.nav-inner{
-    margin: 15px; 
+.nav-inner {
+    margin: 15px;
 }
 #nav h2 {
-    font-size: 21px; 
-    margin-top: 15px;
-    margin-bottom: 15px;
+    font-size: 21px;
     line-height: 1.1;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 #nav-tree ul {
@@ -132,7 +131,7 @@ body {
     padding-top: 10px;
 }
 #content.loading:after {
-    background: rgba(255,255,255,0.5) url('./loading-32-32.gif') no-repeat center center;
+    background: rgba(255,255,255,0.5) url("./loading-32-32.gif") no-repeat center center;
     content: "加载中";
     display: block;
     font-size: 0;
@@ -153,26 +152,102 @@ body {
         opacity: 0.96;
     }
     #nav-mini {
+        background-color: #333;
+        border-radius: 15px;
+        bottom: 10px;
+        color: #fff;
         display: block;
-        right: 10px; 
-        bottom: 10px; 
+        font-size: 30px;
         height: 50px;
+        opacity: 0.9;
         position: fixed;
+        right: 10px;
         text-align: center;
         width: 50px;
         z-index: 11;
-
-        border-radius: 15px;
-        background-color: #333;
-        opacity: .9;
-
-        font-size: 30px; 
-        color: #fff; 
     }
-    #nav-mini .iconfont{
-        font-size: 30px; 
+    #nav-mini .iconfont {
+        font-size: 30px;
     }
     #content {
         padding-left: 0;
     }
+}
+
+
+
+/*搜索*/
+.nav-search {
+    margin-bottom: 20px;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    border: 2px solid #ccc;
+    font-size: 12px;
+    height: 26px;
+    line-height: 26px;
+    outline: none;
+    padding: 0 5px;
+    width: 216px;
+}
+
+.typeahead {
+    background-color: #fff;
+}
+
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+       -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999;
+}
+
+.tt-menu {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+       -moz-box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    margin-top: 4px;
+    padding: 4px 0;
+    width: 230px;
+}
+
+.tt-suggestion {
+    font-size: 14px;
+    line-height: 24px;
+    padding: 3px 8px;
+}
+
+.tt-suggestion:hover,
+.tt-suggestion:hover .tt-highlight{
+    background-color: #0097cf;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tt-suggestion.tt-cursor,
+.tt-suggestion.tt-cursor .tt-highlight {
+    background-color: #0097cf;
+    color: #fff;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+.tt-highlight {
+    background-color: yellow;
 }

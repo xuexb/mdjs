@@ -448,6 +448,37 @@ export default class Mdjs {
         app.use('/', serve_static(this.options.root));
     }
 
+    // _search(req, res, next) {
+    //     let key = req.param('key');
+    //     grep(path.resolve('**/*.md'), key, (data) => {
+    //         let result = [];
+
+    //         result.push('# 搜索结果 - ' + key);
+
+    //         if (Object.keys(data).length) {
+    //             result.push(`\n> 共找到${Object.keys(data).length}条结果\n`);
+    //             Object.keys(data).forEach(filepath => {
+
+    //                 result.push(`## [${this._get_md_title(filepath)}](${filepath.replace(this.options.root, '')})`);
+
+    //                 data[filepath].forEach(val => {
+    //                     result.push('```\n' + val.line + '```');
+    //                 });
+    //             });
+    //         }
+    //         else {
+    //             result.push('无搜索结果～');
+    //         }
+
+    //         res.render('markdown', {
+    //             key: key,
+    //             nav_data: this.get_render_nav(),
+    //             markdown_data: this.renderMarkdown(result.join('\n')).content,
+    //             title: `搜索结果 - ${this.options.name}`
+    //         });
+    //     });
+    // }
+
     /**
      * 内部获取列表数据
      *
