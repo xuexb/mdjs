@@ -143,6 +143,7 @@ $('#J-search').typeahead({
             if ($elem.length) {
                 $elem.trigger('click');
                 $(this).typeahead('close');
+                $(this).blur();
             }
             else if(this.value) {
                 // location.href = '/search/?key=' + this.value;
