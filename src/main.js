@@ -102,7 +102,17 @@ export default class Mdjs {
          * @description 开启后不使用缓存
          * @type {Boolean}
          */
-        debug: false
+        debug: false,
+
+        /**
+         * 默认主页
+         *
+         * @type {Array}
+         */
+        default_index: [
+            'readme.md',
+            'README.md'
+        ]
     }
 
     /**
@@ -415,10 +425,7 @@ export default class Mdjs {
             let filepath = decodeURIComponent('.' + pathname);
 
             // 默认主页
-            let default_index = [
-                'readme.md',
-                'README.md'
-            ];
+            let default_index = this.options.default_index;
             let flag = false;
             for (let i = 0, len = default_index.length; i < len; i++) {
                 if (fs.existsSync(path.resolve(this.options.root, filepath, default_index[i]))) {

@@ -8,6 +8,7 @@
 
 var Mdjs = require('../');
 var assert = require('assert');
+var url = require('url');
 var fs = require('fs');
 var path = require('path');
 
@@ -247,5 +248,50 @@ describe('options', function () {
         finally {
             fs.writeFileSync(packpath, backdata);
         }
+    });
+
+    it('options.default_index', function () {
+        var app = new Mdjs({
+            root: getpath.__dirname,
+            default_index: [
+                '3.md'
+            ]
+        });
+
+        var flag = false;
+        var noop = function () {};
+        var req = {
+            url: '/doc/default index/?name=key-cache&author=xiaowu#xxoo'
+        };
+        var res = {
+            render: function (type, data) {
+                flag = data.markdown_data.indexOf('我是3') !== -1;
+            }
+        };
+
+        app.express = {
+            engine: noop,
+            set: noop,
+            use: noop,
+            get: function (reg, fn) {
+                // reg必须是正则
+                if ('object' !== typeof reg || reg.constructor !== RegExp) {
+                    return;
+                }
+
+                // 如果验证没通过
+                if (!reg.test(url.parse(req.url).pathname)) {
+                    return;
+                }
+
+                // 执行回调
+                fn.call(app, req, res, noop);
+
+                assert.strictEqual(true, flag);
+            }
+        };
+
+        // 重新初始化
+        app._init_express();
     });
 });
