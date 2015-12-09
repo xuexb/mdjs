@@ -24,12 +24,13 @@
     "homepage": "https://github.com/xuexb/mdjs/",
     "dependencies": {
         "art-template": "^3.0.3",
+        "babel-runtime": "^5.8.20",
         "express": "^4.13.3",
         "highlight.js": "^8.9.1",
         "key-cache": "0.x.x",
         "marked": "^0.3.5",
-        "serve-static": "^1.10.0",
-        "babel-runtime": "^5.8.20"
+        "serve-index": "^1.7.2",
+        "serve-static": "^1.10.0"
     },
     "devDependencies": {
         "babel": "5.8.21",

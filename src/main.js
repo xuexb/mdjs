@@ -10,6 +10,7 @@ import template from 'art-template/node/template-native';
 
 import express from 'express';
 import serve_static from 'serve-static';
+import serve_index from 'serve-index';
 
 import fs from 'fs';
 import url from 'url';
@@ -453,6 +454,11 @@ export default class Mdjs {
 
         // 委托源目录
         app.use('/', serve_static(this.options.root));
+
+        // 委托目录浏览
+        app.use('/', serve_index(this.options.root, {
+            icons: true
+        }));
     }
 
     // _search(req, res, next) {
