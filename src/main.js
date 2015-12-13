@@ -132,7 +132,7 @@ export default class Mdjs {
 
         // 合并默认配置
         // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
-        options = this.options = Object.assign({}, Mdjs.options, package_options, options);
+        options = this.options = {...Mdjs.options, ...package_options, ...options};
 
         options.root = path.resolve(options.root);
         options.cache_path = path.resolve(options.cache_path);
