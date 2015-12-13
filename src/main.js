@@ -357,7 +357,7 @@ export default class Mdjs {
     /**
      * 缓存
      *
-     * @description 如果开启了debug，则忽略缓存
+     * @description 如果有key的缓存则直接调用缓存，否则使用fn返回值作为缓存，如果开启了debug则直接使用fn返回值
      * @param  {string}   key  缓存key
      * @param {Function} fn 当没有缓存时执行的回调
      * @return {Object|undefined} 缓存数据或者回调返回值
