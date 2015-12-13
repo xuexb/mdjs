@@ -12,9 +12,9 @@ import express from 'express';
 import serve_static from 'serve-static';
 import serve_index from 'serve-index';
 
-import fs from 'fs';
-import url from 'url';
-import path from 'path';
+import {existsSync, readdirSync, statSync, readFileSync} from 'fs';
+import {parse, format} from 'url';
+import {resolve, dirname, basename, extname} from 'path';
 
 import Key_cache from 'key-cache';
 
@@ -124,7 +124,7 @@ export default class Mdjs {
     constructor(options = {}) {
         let package_options;
         try {
-            package_options = require(path.resolve('./package.json')).mdjs;
+            package_options = require(resolve('./package.json')).mdjs;
         }
         catch (e) {
             package_options = {};
@@ -134,11 +134,11 @@ export default class Mdjs {
         // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
         options = this.options = {...Mdjs.options, ...package_options, ...options};
 
-        options.root = path.resolve(options.root);
-        options.cache_path = path.resolve(options.cache_path);
+        options.root = resolve(options.root);
+        options.cache_path = resolve(options.cache_path);
 
         // 缓存当前运行的目录
-        this.__dirname = path.dirname(__dirname);
+        this.__dirname = dirname(__dirname);
 
         // 缓存express
         this.express = express();
@@ -403,7 +403,7 @@ export default class Mdjs {
         template.config('extname', '.html');
 
         app.engine('.html', template.__express);
-        app.set('views', path.resolve(this.__dirname, './views/'));
+        app.set('views', resolve(this.__dirname, './views/'));
         app.set('view engine', 'html');
 
         // 写入变量
@@ -419,7 +419,7 @@ export default class Mdjs {
 
         // 监听以目录结束的，其实是为了解决默认主页为md文档问题
         app.get(/(^\/$|\/$)/, (req, res, next) => {
-            let parseUrl = url.parse(req.url, true);
+            let parseUrl = parse(req.url, true);
             let pathname = parseUrl.pathname;
 
             // 相对文件的路径,用来判断文件是否存在
@@ -429,14 +429,14 @@ export default class Mdjs {
             let default_index = this.options.default_index;
             let flag = false;
             for (let i = 0, len = default_index.length; i < len; i++) {
-                if (fs.existsSync(path.resolve(this.options.root, filepath, default_index[i]))) {
+                if (existsSync(resolve(this.options.root, filepath, default_index[i]))) {
                     flag = default_index[i];
                     break;
                 }
             }
 
             if (flag) {
-                req.url = url.format({
+                req.url = format({
                     hash: parseUrl.hash,
                     search: parseUrl.search,
                     pathname: pathname + flag,
@@ -450,7 +450,7 @@ export default class Mdjs {
         });
 
         // 委托静态资源
-        app.use('/' + this.options.static_prefix, serve_static(path.resolve(this.__dirname, './static/')));
+        app.use('/' + this.options.static_prefix, serve_static(resolve(this.__dirname, './static/')));
 
         // 委托源目录
         app.use('/', serve_static(this.options.root));
@@ -463,7 +463,7 @@ export default class Mdjs {
 
     // _search(req, res, next) {
     //     let key = req.param('key');
-    //     grep(path.resolve('**/*.md'), key, (data) => {
+    //     grep(resolve('**/*.md'), key, (data) => {
     //         let result = [];
 
     //         result.push('# 搜索结果 - ' + key);
@@ -506,21 +506,21 @@ export default class Mdjs {
 
         dir = dir || options.root;
 
-        let basename = path.basename(dir);
+        let file_basename = basename(dir);
 
         result = {
             uri: dir.replace(options.root, '') || '/',
             children: [],
-            text: options.dir_alias[basename] || basename
+            text: options.dir_alias[file_basename] || file_basename
         };
 
         // 如果目录不存在
-        if (!fs.existsSync(dir)) {
+        if (!existsSync(dir)) {
             return result;
         }
 
         // 读取目录里数据
-        let data = fs.readdirSync(dir);
+        let data = readdirSync(dir);
 
         // 定义目录数据和文件数据
         let dir_data = [];
@@ -528,8 +528,8 @@ export default class Mdjs {
 
         // 遍历数据，拿出目录、文件的数据
         data.forEach(file => {
-            let filepath = path.resolve(dir, file);
-            let stat = fs.statSync(filepath);
+            let filepath = resolve(dir, file);
+            let stat = statSync(filepath);
 
             if (stat.isDirectory()) {
                 if (options.ignore_dir && options.ignore_dir.indexOf(file) === -1) {
@@ -540,7 +540,7 @@ export default class Mdjs {
                 }
             }
             else {
-                if (path.extname(file) === '.md') {
+                if (extname(file) === '.md') {
                     file_data.push({
                         filepath: filepath
                     });
@@ -579,7 +579,7 @@ export default class Mdjs {
      * @return {Object} res
      */
     _md(req, res, next) {
-        let parseUrl = url.parse(req.url, true);
+        let parseUrl = parse(req.url, true);
 
         // 如果要读取源码
         if (parseUrl.query.source) {
@@ -587,17 +587,17 @@ export default class Mdjs {
         }
 
         // 加.是为了变成相对路径
-        let filepath = path.resolve(this.options.root, '.' + parseUrl.pathname);
+        let filepath = resolve(this.options.root, '.' + parseUrl.pathname);
 
         // 为了中文
         filepath = decodeURIComponent(filepath);
 
         // 如果md文件不存在
-        if (!fs.existsSync(filepath)) {
+        if (!existsSync(filepath)) {
             return next();
         }
 
-        let htmldata = this.renderMarkdown(fs.readFileSync(filepath).toString()).content;
+        let htmldata = this.renderMarkdown(readFileSync(filepath).toString()).content;
 
         // 如果是pjax
         if (parseUrl.query.pjax) {
@@ -622,9 +622,9 @@ export default class Mdjs {
      */
     _get_md_title(filepath) {
         // 如果是md扩展
-        if (path.extname(filepath) === '.md') {
+        if (extname(filepath) === '.md') {
             // 获取文件内容
-            let filedata = fs.readFileSync(filepath).toString();
+            let filedata = readFileSync(filepath).toString();
 
             // 正则取出#标题的文字
             if (filedata.match(/^\#+\s?(.+)/)) {
@@ -632,6 +632,6 @@ export default class Mdjs {
             }
         }
 
-        return path.basename(filepath);
+        return basename(filepath);
     }
 }
