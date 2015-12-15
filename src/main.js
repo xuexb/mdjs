@@ -350,6 +350,10 @@ export default class Mdjs {
      * @return {Object} this
      */
     run() {
+        // 委托目录浏览
+        this.express.use('/', serve_index(this.options.root, {
+            icons: true
+        }));
         this.express.listen(this.options.port);
         return this;
     }
@@ -454,11 +458,6 @@ export default class Mdjs {
 
         // 委托源目录
         app.use('/', serve_static(this.options.root));
-
-        // 委托目录浏览
-        app.use('/', serve_index(this.options.root, {
-            icons: true
-        }));
     }
 
     // _search(req, res, next) {
