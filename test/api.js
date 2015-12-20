@@ -126,8 +126,8 @@ describe('api', function () {
             var filedata = fs.readFileSync(filepath).toString();
             var data = app.renderMarkdown(filedata);
 
-            // 4个#2,#3标题
-            strictEqual(4, data.catalog.length);
+            // 5个#1,#2,#3标题
+            strictEqual(5, data.catalog.length);
 
             // 语言验证
             strictEqual(true, data.content.indexOf('<pre><code class="hljs lang-js">') !== -1);

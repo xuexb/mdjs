@@ -283,7 +283,8 @@ export default class Mdjs {
         renderer.heading = (text, level) => {
             let key;
 
-            if (level !== 2 && level !== 3) {
+            // 如果不是h1,h2,h3则直接返回
+            if ([1, 2, 3].indexOf(level) === -1) {
                 return `<h${level}>${text}</h${level}>`;
             }
 
@@ -299,9 +300,18 @@ export default class Mdjs {
                 id: `h${level}-${key}`
             });
 
+            // 判断文本是否为字母和数字
+            let hash = text.replace(/[^\d\w_-]/g, '');
+
+            // 如果有则添加锚点，为了让开发者显式的自己定位
+            if (hash) {
+                hash = `<a name="${hash}" id="${hash}"></a>`;
+            }
+
             return `
                 <h${level}>
                     <span>
+                        ${hash}
                         <a name="h${level}-${key}" class="anchor" href="#h${level}-${key}"></a>
                         <span>${text}</span>
                     </span>
