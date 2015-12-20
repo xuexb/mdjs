@@ -127,7 +127,7 @@ body {
 #content {
     margin: 0 20px;
     padding-bottom: 10px;
-    padding-left: 300px;
+    padding-left: 270px;
     padding-top: 10px;
 }
 #content.loading:after {
