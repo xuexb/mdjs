@@ -66,7 +66,6 @@ body {
 
 #nav-tree ul,
 #nav-tree li {
-    line-height: 26px;
     margin: 0;
     padding: 0;
 }
@@ -75,6 +74,7 @@ body {
     margin-left: 20px;
 }
 .nav-tree-text > a {
+    line-height: 26px;
     height: 26px;
     overflow: hidden;
     overflow: hidden;
@@ -171,6 +171,10 @@ body {
     }
     #content {
         padding-left: 0;
+    }
+    .nav-tree-text > a {
+        line-height: 32px;
+        height: 32px;
     }
 }
 
