@@ -14,7 +14,7 @@ import serve_index from 'serve-index';
 
 import {existsSync, readdirSync, statSync, readFileSync} from 'fs';
 import {parse, format} from 'url';
-import {resolve, dirname, basename, extname} from 'path';
+import {resolve, dirname, basename, extname, sep} from 'path';
 
 import Key_cache from 'key-cache';
 
@@ -560,7 +560,7 @@ export default class Mdjs {
             else {
                 result.children.push({
                     text: this._get_md_title(file.filepath),
-                    uri: file.filepath.replace(options.root, '')
+                    uri: file.filepath.replace(options.root, '').split(sep).join('\/')
                 });
             }
         });

@@ -156,7 +156,7 @@ describe('options', function () {
     });
 
     it('options.debug:true', function () {
-        var cache_path = getpath.temp('options.debug:true');
+        var cache_path = getpath.temp('options.debug.true');
         var app = new Mdjs({
             root: path.resolve(__dirname),
             cache_path: cache_path,
@@ -171,7 +171,7 @@ describe('options', function () {
     });
 
     it('options.debug:false', function () {
-        var cache_path = getpath.temp('options.debug:false');
+        var cache_path = getpath.temp('options.debug.false');
         var app = new Mdjs({
             root: path.resolve(__dirname),
             cache_path: cache_path,
