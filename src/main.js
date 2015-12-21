@@ -301,7 +301,7 @@ export default class Mdjs {
             });
 
             // 使用text文本来写hash
-            let hash = `<a name="${hash}" id="${hash}"></a>`;
+            let hash = `<a name="${text}" id="${text}"></a>`;
 
             return `
                 <h${level}>
