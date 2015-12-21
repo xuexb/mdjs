@@ -300,13 +300,8 @@ export default class Mdjs {
                 id: `h${level}-${key}`
             });
 
-            // 判断文本是否为字母和数字
-            let hash = text.replace(/[^\d\w_-]/g, '');
-
-            // 如果有则添加锚点，为了让开发者显式的自己定位
-            if (hash) {
-                hash = `<a name="${hash}" id="${hash}"></a>`;
-            }
+            // 使用text文本来写hash
+            let hash = `<a name="${hash}" id="${hash}"></a>`;
 
             return `
                 <h${level}>
