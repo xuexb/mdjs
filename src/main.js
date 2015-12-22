@@ -295,8 +295,8 @@ export default class Mdjs {
             key = ++cachekey[level];
 
             catalog.push({
-                text: text,
-                level: level,
+                text,
+                level,
                 id: `h${level}-${key}`
             });
 
@@ -336,7 +336,7 @@ export default class Mdjs {
 
         // md => html
         content = marked(content, {
-            renderer: renderer
+            renderer
         });
 
         // 兼容todo
@@ -344,8 +344,8 @@ export default class Mdjs {
         content = content.replace(/<li>\s*\[x\]\s*/g, '<li><input type="checkbox" disabled checked class="ui-todo">');
 
         return {
-            content: content,
-            catalog: catalog
+            content,
+            catalog
         };
     }
 
@@ -539,14 +539,14 @@ export default class Mdjs {
                 if (options.ignore_dir && options.ignore_dir.indexOf(file) === -1) {
                     dir_data.push({
                         type: 'dir',
-                        filepath: filepath
+                        filepath
                     });
                 }
             }
             else {
                 if (extname(file) === '.md') {
                     file_data.push({
-                        filepath: filepath
+                        filepath
                     });
                 }
             }
@@ -601,17 +601,17 @@ export default class Mdjs {
             return next();
         }
 
-        let htmldata = this.renderMarkdown(readFileSync(filepath).toString()).content;
+        let markdown_data = this.renderMarkdown(readFileSync(filepath).toString()).content;
 
         // 如果是pjax
         if (parseUrl.query.pjax) {
-            return res.end(htmldata);
+            return res.end(markdown_data);
         }
 
         // 渲染md
         return res.render('markdown', {
             nav_data: this.get_render_nav(parseUrl.pathname),
-            markdown_data: htmldata,
+            markdown_data,
             title: `${this._get_md_title(filepath)} - ${this.options.name}`
         });
     }
