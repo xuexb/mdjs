@@ -15,9 +15,10 @@ var path = require('path');
 var getpath = require('./getpath');
 
 describe('options', function () {
-    it('default', function () {
+    it('The default parameters', function () {
         try {
             new Mdjs();
+
             new Mdjs({});
             new Mdjs(null);
             new Mdjs(1);
@@ -31,7 +32,7 @@ describe('options', function () {
         }
     });
 
-    it('check', function () {
+    it('Check the configuration was successful', function () {
         var options = {
             name: 'test',
             port: 9991,
@@ -46,146 +47,6 @@ describe('options', function () {
         Object.keys(options).forEach(function (val) {
             assert.strictEqual(options[val], app.options[val]);
         });
-    });
-
-    it('options.root', function () {
-        var app = new Mdjs({
-            root: getpath.__dirname
-        });
-        var flag = false;
-
-        app._md({
-            url: '/doc/ok.md'
-        }, {
-            render: function () {
-                flag = true;
-            }
-        }, function () {});
-
-        assert.strictEqual(true, flag);
-    });
-
-    it('options.port', function () {
-        try {
-            new Mdjs({
-                port: 9993
-            }).run();
-            new Mdjs().run();
-            assert.strictEqual(true, true);
-        }
-        catch (e) {
-            assert.strictEqual(true, false);
-        }
-
-        try {
-            new Mdjs({
-                port: 9999
-            }).run();
-            new Mdjs({
-                port: 9999
-            }).run();
-            assert.strictEqual(true, false);
-        }
-        catch (e) {
-            assert.strictEqual(true, true);
-        }
-    });
-
-    it('options.ignore_dir', function () {
-        var app = new Mdjs({
-            root: getpath.doc('ignore_dir'),
-            ignore_dir: [
-                '我是忽略'
-            ]
-        });
-
-        var data = app._get_list();
-
-        assert.strictEqual(2, data.children.length);
-    });
-
-    it('options.links empty', function () {
-        new Mdjs({
-            links: ''
-        });
-        new Mdjs({
-            links: null
-        });
-        new Mdjs({
-            links: []
-        });
-    });
-
-    it('options.links - type default', function () {
-        var app = new Mdjs({
-            root: getpath.__dirname,
-            links: [
-                {
-                    text: '前端小武',
-                    url: 'https://xuexb.com/'
-                }
-            ],
-            // 这里是为了不使用缓存
-            debug: true
-        });
-
-        var data = app.get_list();
-
-        assert.deepEqual(app.options.links[0], data[0]);
-    });
-
-    it('options.links - type after', function () {
-        var app = new Mdjs({
-            root: getpath.__dirname,
-            links: [
-                {
-                    text: '前端小武',
-                    url: 'https://xuexb.com/',
-                    type: 'after'
-                }
-            ],
-            // 这里是为了不使用缓存
-            debug: true
-        });
-
-        var data = app.get_list();
-
-        assert.deepEqual(app.options.links[0], data[data.length - 1]);
-
-        app.clear_cache();
-    });
-
-    it('options.debug:true', function () {
-        var cache_path = getpath.temp('options.debug.true');
-        var app = new Mdjs({
-            root: path.resolve(__dirname),
-            cache_path: cache_path,
-            debug: true
-        });
-
-        // 读取列表，让其写入缓存
-        app.get_list();
-
-        // 如果缓存目录不存在算成立
-        assert.strictEqual(false, fs.existsSync(cache_path));
-    });
-
-    it('options.debug:false', function () {
-        var cache_path = getpath.temp('options.debug.false');
-        var app = new Mdjs({
-            root: path.resolve(__dirname),
-            cache_path: cache_path,
-            debug: false
-        });
-
-        // 读取列表，让其写入缓存
-        app.get_list();
-
-        // 判断缓存目录里有没有文件
-        assert.strictEqual(true, fs.readdirSync(cache_path).length > 0);
-
-        // 清空
-        app.clear_cache();
     });
 
     it('package options', function () {
@@ -248,6 +109,150 @@ describe('options', function () {
         finally {
             fs.writeFileSync(packpath, backdata);
         }
+    });
+
+    it('options.root', function () {
+        var app = new Mdjs({
+            root: getpath.__dirname
+        });
+        var flag = false;
+
+        app._md({
+            url: '/doc/ok.md'
+        }, {
+            render: function () {
+                flag = true;
+            }
+        }, function () {});
+
+        assert.strictEqual(true, flag);
+    });
+
+    it('options.port', function () {
+        try {
+            new Mdjs({
+                port: 9993
+            }).run();
+            new Mdjs().run();
+            assert.strictEqual(true, true);
+        }
+        catch (e) {
+            assert.strictEqual(true, false);
+        }
+
+        try {
+            new Mdjs({
+                port: 9999
+            }).run();
+            new Mdjs({
+                port: 9999
+            }).run();
+            assert.strictEqual(true, false);
+        }
+        catch (e) {
+            assert.strictEqual(true, true);
+        }
+    });
+
+    it('options.ignore_dir', function () {
+        var app = new Mdjs({
+            root: getpath.doc('ignore_dir'),
+            ignore_dir: [
+                '我是忽略'
+            ]
+        });
+
+        var data = app._get_list();
+
+        assert.strictEqual(2, data.children.length);
+    });
+
+    describe('options.links', function () {
+        it('is empty', function () {
+            new Mdjs({
+                links: ''
+            });
+            new Mdjs({
+                links: null
+            });
+            new Mdjs({
+                links: []
+            });
+        });
+
+        it('type default', function () {
+            var app = new Mdjs({
+                root: getpath.__dirname,
+                links: [
+                    {
+                        text: '前端小武',
+                        url: 'https://xuexb.com/'
+                    }
+                ],
+                // 这里是为了不使用缓存
+                debug: true
+            });
+
+            var data = app.get_list();
+
+            assert.deepEqual(app.options.links[0], data[0]);
+        });
+
+        it('type after', function () {
+            var app = new Mdjs({
+                root: getpath.__dirname,
+                links: [
+                    {
+                        text: '前端小武',
+                        url: 'https://xuexb.com/',
+                        type: 'after'
+                    }
+                ],
+                // 这里是为了不使用缓存
+                debug: true
+            });
+
+            var data = app.get_list();
+
+            assert.deepEqual(app.options.links[0], data[data.length - 1]);
+
+            app.clear_cache();
+        });
+    });
+
+    describe('options.debug', function () {
+        it('true', function () {
+            var cache_path = getpath.temp('options.debug.true');
+            var app = new Mdjs({
+                root: path.resolve(__dirname),
+                cache_path: cache_path,
+                debug: true
+            });
+
+            // 读取列表，让其写入缓存
+            app.get_list();
+
+            // 如果缓存目录不存在算成立
+            assert.strictEqual(false, fs.existsSync(cache_path));
+        });
+
+        it('false', function () {
+            var cache_path = getpath.temp('options.debug.false');
+            var app = new Mdjs({
+                root: path.resolve(__dirname),
+                cache_path: cache_path,
+                debug: false
+            });
+
+            // 读取列表，让其写入缓存
+            app.get_list();
+
+            // 判断缓存目录里有没有文件
+            assert.strictEqual(true, fs.readdirSync(cache_path).length > 0);
+
+            // 清空
+            app.clear_cache();
+        });
     });
 
     it('options.default_index', function () {

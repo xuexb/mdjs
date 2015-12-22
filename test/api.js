@@ -17,7 +17,7 @@ var strictEqual = assert.strictEqual;
 describe('api', function () {
     // 运行2个，当第2个占用端口时表示成功
     describe('run', function () {
-        it('启动状态', function () {
+        it('start state', function () {
             try {
                 new Mdjs().run();
                 new Mdjs().run();
@@ -28,7 +28,7 @@ describe('api', function () {
             }
         });
 
-        it('返回值', function () {
+        it('return value', function () {
             var app = new Mdjs();
 
             strictEqual(true, app === app.run());
@@ -42,19 +42,19 @@ describe('api', function () {
             new Mdjs().clear_cache();
         });
 
-        it('空调用', function () {
+        it('no arguments', function () {
             var app = new Mdjs();
 
             strictEqual(undefined, app.cache());
         });
 
-        it('无缓存', function () {
+        it('cache not exist', function () {
             var app = new Mdjs();
 
             strictEqual(undefined, app.cache('不存在'));
         });
 
-        it('有缓存', function () {
+        it('cached', function () {
             var app = new Mdjs();
 
             app.cache('存在', function () {
@@ -64,7 +64,7 @@ describe('api', function () {
             strictEqual(true, app.cache('存在'));
         });
 
-        it('开启debug', function () {
+        it('open debug', function () {
             var app = new Mdjs({
                 debug: true
             });
@@ -72,7 +72,7 @@ describe('api', function () {
             strictEqual(undefined, app.cache('不存在'));
         });
 
-        it('无缓存+回调', function () {
+        it('cache not exist and callback', function () {
             var app = new Mdjs();
 
             var flag;
@@ -90,7 +90,7 @@ describe('api', function () {
             strictEqual(1, 1);
         });
 
-        it('有缓存+回调', function () {
+        it('cached and callback', function () {
             var app = new Mdjs();
 
             // 当没有缓存时读获取回调返回值
@@ -110,21 +110,21 @@ describe('api', function () {
         });
     });
 
-    describe('renderMarkdown', function () {
-        it('返回值', function () {
+    describe('render_markdown', function () {
+        it('return value', function () {
             var app = new Mdjs();
 
-            strictEqual('object', typeof app.renderMarkdown());
-            strictEqual('', app.renderMarkdown().content);
-            strictEqual('object', typeof app.renderMarkdown().catalog);
-            strictEqual(0, app.renderMarkdown().catalog.length);
+            strictEqual('object', typeof app.render_markdown());
+            strictEqual('', app.render_markdown().content);
+            strictEqual('object', typeof app.render_markdown().catalog);
+            strictEqual(0, app.render_markdown().catalog.length);
         });
 
-        it('渲染', function () {
+        it('render data', function () {
             var app = new Mdjs();
-            var filepath = getpath.doc('renderMarkdown(str)', '1.md');
+            var filepath = getpath.doc('render_markdown(str)', '1.md');
             var filedata = fs.readFileSync(filepath).toString();
-            var data = app.renderMarkdown(filedata);
+            var data = app.render_markdown(filedata);
 
             // 5个#1,#2,#3标题
             strictEqual(5, data.catalog.length);
@@ -140,11 +140,11 @@ describe('api', function () {
             strictEqual(true, data.content.indexOf('<pre><code class="hljs">') !== -1);
         });
 
-        it('支持todo', function () {
+        it('upport todo', function () {
             var app = new Mdjs();
-            var filepath = getpath.doc('renderMarkdown(str)', '1.md');
+            var filepath = getpath.doc('render_markdown(str)', '1.md');
             var filedata = fs.readFileSync(filepath).toString();
-            var data = app.renderMarkdown(filedata).content;
+            var data = app.render_markdown(filedata).content;
 
             // todo支持验证
             strictEqual(true, data.indexOf('<li><input type="checkbox" class="ui-todo" disabled>') !== -1);
@@ -153,7 +153,7 @@ describe('api', function () {
     });
 
     describe('get_render_nav', function () {
-        it('返回值', function () {
+        it('return value', function () {
             var app = new Mdjs({
                 root: getpath.__dirname
             });
@@ -165,7 +165,7 @@ describe('api', function () {
             app.clear_cache();
         });
 
-        it('目录为空', function () {
+        it('directory is empty', function () {
             var app = new Mdjs();
 
             // 重写方法使其没数据
@@ -176,7 +176,7 @@ describe('api', function () {
             strictEqual('', app.get_render_nav());
         });
 
-        it('默认选中', function () {
+        it('check default selected', function () {
             var app = new Mdjs({
                 root: getpath.__dirname
             });
@@ -195,7 +195,7 @@ describe('api', function () {
     });
 
     describe('clear_cache', function () {
-        it('写入缓存', function () {
+        it('Caching Status', function () {
             var cache_path = getpath.temp('clear_cache()');
             var app = new Mdjs({
                 cache_path: cache_path,
@@ -215,7 +215,7 @@ describe('api', function () {
             strictEqual(true, fs.readdirSync(cache_path).length === 0);
         });
 
-        it('返回值', function () {
+        it('return value', function () {
             var app = new Mdjs();
 
             strictEqual(true, app === app.clear_cache());
@@ -226,7 +226,7 @@ describe('api', function () {
         afterEach(function () {
             new Mdjs().clear_cache();
         });
-        it('返回值', function () {
+        it('return value', function () {
             var app = new Mdjs();
 
             app._get_list = function () {
@@ -237,21 +237,63 @@ describe('api', function () {
             strictEqual(0, app.get_list().length);
         });
 
-        it('无数据', function () {
-            var filepath = getpath.temp('not fount' + Date.now());
+        it('return value data', function () {
+            var app = new Mdjs({
+                root: getpath.doc('get_list')
+            });
+
+            strictEqual(2, app.get_list().length);
+        });
+
+        it('directory not found', function () {
+            var filepath = getpath.temp('not found' + Date.now());
             var app = new Mdjs({
                 root: filepath
             });
 
             strictEqual(0, app.get_list().length);
         });
+    });
 
-        it('有数据', function () {
-            var app = new Mdjs({
-                root: getpath.doc('get_list')
-            });
+    describe('get_markdown_title', function () {
+        it('return value', function () {
+            var filepath = getpath.doc('markdown.md');
 
-            strictEqual(2, app.get_list().length);
+            var title = new Mdjs().get_markdown_title(filepath);
+
+            assert.strictEqual('title', title);
+
+            var filepath2 = getpath.doc('ok2.md');
+
+            var title2 = new Mdjs().get_markdown_title(filepath2);
+
+            assert.strictEqual('ok2', title2);
+        });
+
+        it('Chinese content', function () {
+            var filepath = getpath.doc('default index', 'readme.md');
+
+            var title = new Mdjs().get_markdown_title(filepath);
+
+            assert.strictEqual('默认主页', title);
+        });
+
+        // 获取md标题
+        it('Content no title', function () {
+            var filepath = getpath.doc('ok.md');
+
+            var title = new Mdjs().get_markdown_title(filepath);
+
+            assert.strictEqual('ok.md', title);
+        });
+
+        // 获取非md标题
+        it('Extension is not md', function () {
+            var filepath = '/test/test/1.html';
+
+            var title = new Mdjs().get_markdown_title(filepath);
+
+            assert.strictEqual('1.html', title);
         });
     });
 
