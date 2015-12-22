@@ -273,7 +273,7 @@ export default class Mdjs {
      *
      * @return {Object}         {content:html代码, catalog: h2,3分类}
      */
-    renderMarkdown(content = '') {
+    render_markdown(content = '') {
         let renderer = new marked.Renderer();
         let cachekey = {};
 
@@ -476,7 +476,7 @@ export default class Mdjs {
     //             result.push(`\n> 共找到${Object.keys(data).length}条结果\n`);
     //             Object.keys(data).forEach(filepath => {
 
-    //                 result.push(`## [${this._get_md_title(filepath)}](${filepath.replace(this.options.root, '')})`);
+    //                 result.push(`## [${this.get_markdown_title(filepath)}](${filepath.replace(this.options.root, '')})`);
 
     //                 data[filepath].forEach(val => {
     //                     result.push('```\n' + val.line + '```');
@@ -490,7 +490,7 @@ export default class Mdjs {
     //         res.render('markdown', {
     //             key: key,
     //             nav_data: this.get_render_nav(),
-    //             markdown_data: this.renderMarkdown(result.join('\n')).content,
+    //             markdown_data: this.render_markdown(result.join('\n')).content,
     //             title: `搜索结果 - ${this.options.name}`
     //         });
     //     });
@@ -564,7 +564,7 @@ export default class Mdjs {
             }
             else {
                 result.children.push({
-                    text: this._get_md_title(file.filepath),
+                    text: this.get_markdown_title(file.filepath),
                     uri: file.filepath.replace(options.root, '').split(sep).join('\/')
                 });
             }
@@ -601,7 +601,7 @@ export default class Mdjs {
             return next();
         }
 
-        let markdown_data = this.renderMarkdown(readFileSync(filepath).toString()).content;
+        let markdown_data = this.render_markdown(readFileSync(filepath).toString()).content;
 
         // 如果是pjax
         if (parseUrl.query.pjax) {
@@ -612,7 +612,7 @@ export default class Mdjs {
         return res.render('markdown', {
             nav_data: this.get_render_nav(parseUrl.pathname),
             markdown_data,
-            title: `${this._get_md_title(filepath)} - ${this.options.name}`
+            title: `${this.get_markdown_title(filepath)} - ${this.options.name}`
         });
     }
 
@@ -624,7 +624,7 @@ export default class Mdjs {
      *
      * @return {string}     标题
      */
-    _get_md_title(filepath) {
+    get_markdown_title(filepath) {
         // 如果是md扩展
         if (extname(filepath) === '.md') {
             // 获取文件内容
