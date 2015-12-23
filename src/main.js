@@ -424,7 +424,7 @@ export default class Mdjs {
         });
 
         // 绑定.md文档
-        app.get(/([\s\S]+?)\.md$/, this._md.bind(this));
+        app.get(/([\s\S]+?)\.md$/, ::this._md);
 
         // 监听以目录结束的，其实是为了解决默认主页为md文档问题
         app.get(/(^\/$|\/$)/, (req, res, next) => {
