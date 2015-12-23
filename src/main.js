@@ -434,15 +434,14 @@ export default class Mdjs {
             // 相对文件的路径,用来判断文件是否存在
             let filepath = decodeURIComponent('.' + pathname);
 
-            // 默认主页
-            let default_index = this.options.default_index;
+            // 处理默认主页，拿配置的主页文件名去查找实际这个文件是否存在
             let flag = false;
-            for (let i = 0, len = default_index.length; i < len; i++) {
-                if (existsSync(resolve(this.options.root, filepath, default_index[i]))) {
-                    flag = default_index[i];
-                    break;
+            this.options.default_index.some(val => {
+                if (existsSync(resolve(this.options.root, filepath, val))) {
+                    flag = val;
+                    return true;
                 }
-            }
+            });
 
             if (flag) {
                 req.url = format({
