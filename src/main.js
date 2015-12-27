@@ -585,9 +585,8 @@ export default class Mdjs {
     }
 
     /**
-     * 内部获取md文档的标题
+     * 获取md文档的标题
      *
-     * @private
      * @param  {string} filepath 文件路径
      *
      * @return {string}     标题
