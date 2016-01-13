@@ -294,20 +294,22 @@ export default class Mdjs {
 
             key = ++cachekey[level];
 
+            // 使用text文本来写hash
+            // 把text文本里的标签去掉
+            let hash = String(text).replace(/<([^>]+?)>/g, '');
+
             catalog.push({
                 text,
                 level,
-                id: `h${level}-${key}`
+                id: `h${level}-${key}`,
+                hash: hash
             });
-
-            // 使用text文本来写hash
-            let hash = `<a name="${text}" id="${text}"></a>`;
 
             return `
                 <h${level}>
                     <span>
-                        ${hash}
-                        <a name="h${level}-${key}" class="anchor" href="#h${level}-${key}"></a>
+                        <a name="${hash}" id="${hash}"></a>
+                        <a name="h${level}-${key}" href="#h${level}-${key}"></a>
                         <span>${text}</span>
                     </span>
                 </h${level}>
