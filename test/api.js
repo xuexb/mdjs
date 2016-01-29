@@ -287,6 +287,15 @@ describe('api', function () {
             assert.strictEqual('ok.md', title);
         });
 
+        // 获取md标题
+        it('带空格标题', function () {
+            var filepath = getpath.doc('ok3.md');
+
+            var title = new Mdjs().get_markdown_title(filepath);
+
+            assert.strictEqual('ok3', title);
+        });
+
         // 获取非md标题
         it('Extension is not md', function () {
             var filepath = '/test/test/1.html';

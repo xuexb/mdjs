@@ -600,7 +600,7 @@ export default class Mdjs {
             let filedata = readFileSync(filepath).toString();
 
             // 正则取出#标题的文字
-            if (filedata.match(/^\#+\s?(.+)/)) {
+            if (filedata.match(/^\s*\#+\s?(.+)/)) {
                 return String(RegExp.$1).trim();
             }
         }
