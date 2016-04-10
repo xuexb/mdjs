@@ -154,7 +154,7 @@ export default class Mdjs {
      *
      * @return {string}     html代码
      */
-    get_render_nav(uri) {
+    get_render_nav(id) {
         let data = this.get_list();
         let str = '';
 
@@ -162,64 +162,53 @@ export default class Mdjs {
             return str;
         }
 
-        if (uri) {
-            uri = decodeURIComponent(uri);
+        if (id) {
+            id = decodeURIComponent(id);
         }
 
         let filter = (filepath, type) => {
-            if (!uri) {
+            if (!id) {
                 return false;
             }
 
             if (type === 'dir') {
-                return uri.indexOf(filepath + '/') === 0;
+                return id.indexOf(filepath + '/') === 0;
             }
-            return uri === filepath;
+            return id === filepath;
         };
+
+        console.log(id)
 
         let fn = (res) => {
             let html = '';
 
             res.forEach((val) => {
+                val.icon = false;
+
                 if (!val.children || !val.children.length) {
-                    if (filter(val.uri, 'file')) {
-                        html += `<li class="nav-tree-file nav-tree-current">`;
+                    if (filter(val.id, 'file')) {
+                        val.state = {
+                            // opened: true,
+                            selected: true
+                        }
                     }
-                    else {
-                        html += `<li class="nav-tree-file">`;
-                    }
-                    html += `
-                            <div class="nav-tree-text">
-                                <a href="${val.uri}" class="nav-tree-file-a" data-uri="${val.uri}" title="${val.text}">
-                                    ${val.text}
-                                </a>
-                            </div>
-                        </li>
-                    `;
                 }
                 else {
-                    if (filter(val.uri, 'dir')) {
-                        html += `<li class="nav-tree-dir nav-tree-dir-open">`;
+                    if (filter(val.id, 'dir')) {
+                        val.state = {
+                            opened: true
+                        }
                     }
-                    else {
-                        html += `<li class="nav-tree-dir">`;
-                    }
-                    html += `
-                            <div class="nav-tree-text">
-                                <a href="#" class="nav-tree-dir-a" data-uri="${val.uri}" title="${val.text}">
-                                    ${val.text}
-                                </a>
-                            </div>
-                            ${fn(val.children)}
-                        </li>
-                    `;
+
+                    fn(val.children);
                 }
             });
-
-            return '<ul>' + html + '</ul>';
         };
 
-        return fn(data);
+
+        fn(data);
+
+        return data;
     }
 
     /**
@@ -483,7 +472,7 @@ export default class Mdjs {
         let file_basename = basename(dir);
 
         result = {
-            uri: dir.replace(options.root, '') || '/',
+            id: dir.replace(options.root, '') || '/',
             children: [],
             text: options.dir_alias[file_basename] || file_basename
         };
@@ -535,7 +524,7 @@ export default class Mdjs {
             else {
                 result.children.push({
                     text: this.get_markdown_title(file.filepath),
-                    uri: file.filepath.replace(options.root, '').split(sep).join('\/')
+                    id: file.filepath.replace(options.root, '').split(sep).join('\/')
                 });
             }
         });
@@ -580,7 +569,7 @@ export default class Mdjs {
 
         // 渲染md
         return res.render('markdown', {
-            nav_data: this.get_render_nav(parseUrl.pathname),
+            nav_data: JSON.stringify(this.get_render_nav(parseUrl.pathname)),
             markdown_data,
             title: `${this.get_markdown_title(filepath)} - ${this.options.name}`
         });

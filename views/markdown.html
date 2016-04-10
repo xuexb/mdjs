@@ -2,45 +2,71 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title><%=title||'文档'%></title>
-    <meta name="renderer" content="webkit">
+    <title><%=title%></title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta content="width=device-width,minimum-scale=1.0,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" name="viewport">
-    <link rel="stylesheet" href="/<%=options.static_prefix%>/reset.css">
-    <link rel="stylesheet" href="/<%=options.static_prefix%>/markdown.css">
-    <link rel="stylesheet" href="/<%=options.static_prefix%>/highlightjs.css">
-    <link rel="stylesheet" href="/<%=options.static_prefix%>/iconfont/iconfont.css">
-    <link rel="stylesheet" href="/<%=options.static_prefix%>/page.css">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/<%=options.static_prefix%>/reset.css">
+    <link rel="stylesheet" type="text/css" href="/<%=options.static_prefix%>/icon.css">
+    <link rel="stylesheet" type="text/css" href="/<%=options.static_prefix%>/markdown.css">
+    <link rel="stylesheet" type="text/css" href="/<%=options.static_prefix%>/highlightjs.css">
+    <link rel="stylesheet" type="text/css" href="/<%=options.static_prefix%>/mdjs.css">
 
     <script src="/<%=options.static_prefix%>/jquery.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/themes/default/style.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>
 </head>
 <body>
-    <div class="progress-indicator-2"></div>
-    <div id="nav-mini"><i class="iconfont">&#xe653;</i></div>
-    <div id="nav">
-        <div class="nav-inner">
-            <h2><%=options.name%></h2>
-            <div class="nav-search">
-                <input type="text" value="<%=key||''%>" id="J-search" class="typeahead" placeholder="搜点什么呢">
-            </div>
-            <div id="nav-tree">
-                <%=#nav_data%>
-            </div>
+
+    <div class="md-wrap" data-open="true">
+        <div class="md-head">
+            <a class="md-title" href="/">
+                <%=options.name%>
+            </a>
         </div>
-    </div>
-    <div id="content">
-        <div class="markdown-body">
-            <%=#markdown_data%>
+        <div class="md-body">
+            <div class="md-body-left">
+                <div class="md-body-left-tools">
+                    <span class="icon-chevron-right" title="点击展开"></span>
+                    <span class="icon-chevron-left" title="点击关闭"></span>
+                </div>
+                <div class="clear md-body-tabnav">
+                    <span class="md-body-tabnav-item md-body-tabnav-active"><i class="icon icon-menu"></i>目录</span>
+                    <!-- <span class="md-body-tabnav-item"><i class="icon icon-heart"></i>收藏</span> -->
+                </div>
+
+                <div class="md-body-tabcont md-body-tab-dir" style="display: block;">
+                    <form class="md-body-tab-search-form c-gap-top c-gap-left c-gap-right" onsubmit="return false;" autocomplete="off">
+                        <label class="md-body-tab-search-form-text">
+                            <input type="text" name="keyword" placeholder="请输入搜索关键词..." value="<%=key||''%>">
+                        </label>
+                        <button class="md-body-tab-search-form-btn icon-search" type="submit"></button>
+
+
+                        <div class="md-body-search-down">
+                        </div>
+                    </form>
+
+                    <div class="md-body-tab-dir-tree md-scroll" id="nav">
+                        loading...
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            <div class="md-body-right md-scroll">
+                <div class="md-body-right-inner">
+                <div class="markdown-body">
+                    <%=#markdown_data%>
+                </div>
+            </div>
         </div>
     </div>
     
     <script type="text/javascript">
-        window.options = {
-            name: '<%=options.name%>'
-        };
+        window.nav_data = <%=#nav_data%>
     </script>
-    <script src="/<%=options.static_prefix%>/pjax.js"></script>
-    <script src="/<%=options.static_prefix%>/typeahead.jquery.js"></script>
-    <script src="/<%=options.static_prefix%>/page.js"></script>
+    <script src="/<%=options.static_prefix%>/mdjs.js"></script>
 </body>
 </html>

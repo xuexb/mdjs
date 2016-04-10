@@ -30,7 +30,8 @@
         "key-cache": "0.x.x",
         "marked": "^0.3.5",
         "serve-index": "^1.7.2",
-        "serve-static": "^1.10.0"
+        "serve-static": "^1.10.0",
+        "fs-grep": "*"
     },
     "devDependencies": {
         "babel": "5.8.21",
