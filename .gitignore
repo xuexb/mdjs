@@ -31,3 +31,4 @@ node_modules
 /lib/
 /.cache/
 /test/temp/
+/test_doc/

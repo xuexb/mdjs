@@ -7,7 +7,7 @@
 'use strict';
 
 import template from 'art-template/node/template-native';
-
+import {slugify} from 'transliteration';
 import express from 'express';
 import serve_static from 'serve-static';
 import serve_index from 'serve-index';
@@ -180,10 +180,9 @@ export default class Mdjs {
         console.log(id)
 
         let fn = (res) => {
-            let html = '';
-
             res.forEach((val) => {
                 val.icon = false;
+                val.uri = slugify(val.text, {separator: ''});
 
                 if (!val.children || !val.children.length) {
                     if (filter(val.id, 'file')) {
