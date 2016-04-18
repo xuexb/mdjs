@@ -10,7 +10,6 @@ import template from 'art-template/node/template-native';
 import {slugify} from 'transliteration';
 import express from 'express';
 import serve_static from 'serve-static';
-import serve_index from 'serve-index';
 
 import {existsSync, readdirSync, statSync, readFileSync} from 'fs';
 import {parse, format} from 'url';
@@ -257,10 +256,6 @@ export default class Mdjs {
      * @return {Object} this
      */
     run() {
-        // 委托目录浏览
-        this.express.use('/', serve_index(this.options.root, {
-            icons: true
-        }));
         this.express.listen(this.options.port);
         return this;
     }

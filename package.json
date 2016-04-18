@@ -30,7 +30,6 @@
     "highlight.js": "^8.9.1",
     "key-cache": "0.x.x",
     "marked": "^0.3.5",
-    "serve-index": "^1.7.2",
     "serve-static": "^1.10.0",
     "transliteration": "^0.1.1"
   },
