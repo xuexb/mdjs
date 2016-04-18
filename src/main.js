@@ -215,6 +215,8 @@ export default class Mdjs {
 
         // 渲染代码
         renderer.code = (data, lang) => {
+            let html;
+
             data = highlight.highlightAuto(data).value;
 
             // 有语言时
@@ -222,14 +224,16 @@ export default class Mdjs {
 
                 // 超过3行有提示
                 if (data.split(/\n/).length >= 3) {
-                    let html = `<pre><code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>`;
-                    return html + `${data}</code></pre>`;
+                    html = `<pre><code class="hljs lang-${lang}" data-lang="${lang}">${data}</code></pre>`;
                 }
 
-                return `<pre><code class="hljs lang-${lang}">${data}</code></pre>`;
+                html = `<pre><code class="hljs lang-${lang}">${data}</code></pre>`;
+            }
+            else {
+                html = `<pre><code class="hljs">${data}</code></pre>`;
             }
 
-            return `<pre><code class="hljs">${data}</code></pre>`;
+            return html;
         };
 
         // md => html
