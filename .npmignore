@@ -1,4 +1,9 @@
 node_modules/
 /.cache/
-/test/temp/
 /coverage/
+/.babelrc
+/.travis.yml
+/appveyor.yml
+/.fecsrc
+/test/
+/release.sh
