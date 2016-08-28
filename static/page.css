@@ -220,3 +220,8 @@ body.nav-hide #nav.nav-show {
         line-height: 32px;
     }
 }
+
+/*添加弹性*/
+.hljs {
+    -webkit-overflow-scrolling: touch; 
+}
