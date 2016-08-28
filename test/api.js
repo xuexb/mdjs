@@ -306,4 +306,5 @@ describe('api', function () {
         });
     });
 
+    describe('#reset', function () {});
 });
