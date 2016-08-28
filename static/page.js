@@ -89,14 +89,12 @@ $(function () {
         $('#nav').toggleClass('nav-show');
     });
     $('#nav').on('click', '.nav-tree-file-a', function () {
-        if ($('#nav-mini').is(':visible')) {
-            $('#nav').removeClass('nav-show');
-        }
-
+        $('#nav').removeClass('nav-show');
     });
 
     $('#nav-flag').on('click', function () {
         $('body').toggleClass('nav-hide');
         this.title = this.title === '点击收起' ? '点击展开' : '点击收起';
+        $('#nav').removeClass('nav-show');
     });
 });

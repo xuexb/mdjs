@@ -181,7 +181,8 @@ body.nav-hide #nav {
     width: 100%;
     z-index: 1000;
 }
-#nav.nav-show {
+#nav.nav-show,
+body.nav-hide #nav.nav-show {
     left: 0;
 }
 
