@@ -1,0 +1,221 @@
+
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+a:hover,
+a:active {
+    text-decoration: underline;
+}
+
+input,
+select,
+textarea,
+button {
+    font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+    background-color: #fff;
+    color: #333;
+    font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+
+.progress-indicator-2 {
+    background-color: #0a74da;
+    height: 3px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    z-index: 20;
+}
+
+#nav-flag {
+    background-color: #ccc;
+    cursor: pointer;
+    height: 30px;
+    left: 260px;
+    line-height: 30px;
+    position: fixed;
+    text-align: center;
+    top: 50%;
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+    -webkit-user-select: none;
+            user-select: none;
+    width: 30px;
+    z-index: 998;
+}
+body.nav-hide #nav-flag {
+    left: 0;
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+}
+body.nav-hide #content {
+    padding-left: 0;
+}
+body.nav-hide #nav {
+    left: -300px;
+    opacity: 0.96;
+}
+
+#nav {
+    background-color: #fff;
+    border-right: 1px solid #bbb;
+    -webkit-box-shadow: 0 0 40px #ccc;
+       -moz-box-shadow: 0 0 40px #ccc;
+            box-shadow: 0 0 40px #ccc;
+    height: 100%;
+    overflow: -moz-scrollbars-vertical;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    -webkit-transition: left 0.4s;
+         -o-transition: left 0.4s;
+            transition: left 0.4s;
+    width: 260px;
+    z-index: 10;
+}
+
+.nav-inner {
+    margin: 15px;
+}
+
+#nav h2 {
+    font-size: 21px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+#nav h2 a {
+    color: #333;
+    text-decoration: none;
+}
+
+#nav-tree {
+    border-top: 1px solid  #ccc;
+    padding-top: 10px;
+}
+#nav-tree ul {
+    list-style: none;
+}
+
+#nav-tree ul,
+#nav-tree li {
+    margin: 0;
+    padding: 0;
+}
+
+#nav-tree ul ul {
+    margin-left: 20px;
+}
+.nav-tree-text > a {
+    height: 26px;
+    line-height: 26px;
+    overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#nav-tree a {
+    display: block;
+    padding-left: 5px;
+}
+#nav-tree a:hover,
+.nav-tree-current > .nav-tree-text > a {
+    background-color: #f0f0f0;
+    text-decoration: none;
+}
+.nav-tree-dir-open {
+    height: auto !important;
+}
+.nav-tree-dir > ul {
+    display: none;
+}
+.nav-tree-dir-open > ul {
+    display: block;
+}
+
+.nav-tree-file > .nav-tree-text > a:before,
+.nav-tree-dir > .nav-tree-text > a:before,
+#nav-flag {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    margin-right: 3px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-stroke-width: 0.2px;
+}
+.nav-tree-file > .nav-tree-text > a:before {
+    content: "\e653";
+}
+.nav-tree-dir > .nav-tree-text > a:before {
+    content: "\e656";
+}
+
+.nav-tree-dir-open > .nav-tree-text > a:before {
+    content: "\e652";
+}
+
+#nav-mini {
+    display: none;
+}
+#content {
+    margin: 0 20px;
+    padding-bottom: 10px;
+    padding-left: 270px;
+    padding-top: 10px;
+}
+#content.loading:after {
+    background: rgba(255,255,255,0.5) url("./loading-32-32.gif") no-repeat center center;
+    content: "加载中";
+    display: block;
+    font-size: 0;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+#nav.nav-show {
+    left: 0;
+}
+
+@media (max-width: 600px) {
+    #nav {
+        left: -300px;
+        opacity: 0.96;
+    }
+    #nav-flag {
+        display: none;
+    }
+    #nav-mini {
+        background-color: #333;
+        border-radius: 15px;
+        bottom: 10px;
+        color: #fff;
+        display: block;
+        font-size: 30px;
+        height: 50px;
+        opacity: 0.9;
+        position: fixed;
+        right: 10px;
+        text-align: center;
+        width: 50px;
+        z-index: 11;
+    }
+    #nav-mini .iconfont {
+        font-size: 30px;
+    }
+    #content {
+        padding-left: 0;
+    }
+    .nav-tree-text > a {
+        height: 32px;
+        line-height: 32px;
+    }
+}

@@ -4,12 +4,11 @@
  * @email fe.xiaowu@gmail.com
  */
 
-'use strict';
-
 import template from 'art-template/node/template-native';
-import {slugify} from 'transliteration';
+
 import express from 'express';
 import serve_static from 'serve-static';
+import serve_index from 'serve-index';
 
 import {existsSync, readdirSync, statSync, readFileSync} from 'fs';
 import {parse, format} from 'url';
@@ -23,29 +22,20 @@ import highlight from 'highlight.js';
 import OPTIONS from './options';
 
 export default class Mdjs {
+
     /**
      * 构造器
      *
      * @param  {Object} options 配置参数
      */
     constructor(options = {}) {
-        let package_options;
-        try {
-            package_options = require(resolve('./package.json')).mdjs;
-        }
-        catch (e) {
-            package_options = {};
-        }
-
-        // 合并默认配置
-        // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
-        options = this.options = {...OPTIONS, ...package_options, ...options};
-
-        options.root = resolve(options.root);
-        options.cache_path = resolve(options.cache_path);
+        // 先把启动参数缓存，以后覆盖配置使用
+        this.__options = options;
 
         // 缓存当前运行的目录
         this.__dirname = dirname(__dirname);
+
+        this.reset();
 
         // 缓存express
         this.express = express();
@@ -55,13 +45,46 @@ export default class Mdjs {
     }
 
     /**
+     * 重置配置参数
+     *
+     * @param  {Object} options 配置参数
+     *
+     * @return {Object}         this
+     */
+    reset(options) {
+        let pkg;
+        try {
+            // 先删除缓存
+            delete require.cache[resolve('./package.json')];
+
+            // 加载package模块
+            pkg = require(resolve('./package.json')).mdjs;
+        }
+        catch (e) {
+            pkg = {};
+        }
+
+        let useOptions = this.__options;
+
+        // 合并默认配置
+        // 合并的顺序是： 参数 > package.mdjs > 默认 （由左向右合并）
+        options = this.options = {...OPTIONS, ...pkg, useOptions, ...options};
+
+        // 重新赋值
+        options.root = resolve(options.root);
+        options.cache_path = resolve(options.cache_path);
+
+        return this.clear_cache();
+    }
+
+    /**
      * 获取渲染后的导航html代码
      *
      * @param  {string|undefined} uri 当前高亮的路径，如果为空则全不高亮， 高亮即展开
      *
      * @return {string}     html代码
      */
-    get_render_nav(id) {
+    get_render_nav(uri) {
         let data = this.get_list();
         let str = '';
 
@@ -69,52 +92,64 @@ export default class Mdjs {
             return str;
         }
 
-        if (id) {
-            id = decodeURIComponent(id);
+        if (uri) {
+            uri = decodeURIComponent(uri);
         }
 
         let filter = (filepath, type) => {
-            if (!id) {
+            if (!uri) {
                 return false;
             }
 
             if (type === 'dir') {
-                return id.indexOf(filepath + '/') === 0;
+                return uri.indexOf(filepath + '/') === 0;
             }
-            return id === filepath;
+            return uri === filepath;
         };
 
-        console.log(id)
+        let fn = res => {
+            let html = '';
 
-        let fn = (res) => {
-            res.forEach((val) => {
-                val.icon = false;
-                val.uri = slugify(val.text, {separator: ''});
-
+            res.forEach(val => {
                 if (!val.children || !val.children.length) {
-                    if (filter(val.id, 'file')) {
-                        val.state = {
-                            // opened: true,
-                            selected: true
-                        }
+                    if (filter(val.uri, 'file')) {
+                        html += `<li class="nav-tree-file nav-tree-current">`;
                     }
+                    else {
+                        html += `<li class="nav-tree-file">`;
+                    }
+                    html += `
+                            <div class="nav-tree-text">
+                                <a href="${val.uri}" class="nav-tree-file-a" data-uri="${val.uri}" title="${val.text}">
+                                    ${val.text}
+                                </a>
+                            </div>
+                        </li>
+                    `;
                 }
                 else {
-                    if (filter(val.id, 'dir')) {
-                        val.state = {
-                            opened: true
-                        }
+                    if (filter(val.uri, 'dir')) {
+                        html += `<li class="nav-tree-dir nav-tree-dir-open">`;
                     }
-
-                    fn(val.children);
+                    else {
+                        html += `<li class="nav-tree-dir">`;
+                    }
+                    html += `
+                            <div class="nav-tree-text">
+                                <a href="#" class="nav-tree-dir-a" data-uri="${val.uri}" title="${val.text}">
+                                    ${val.text}
+                                </a>
+                            </div>
+                            ${fn(val.children)}
+                        </li>
+                    `;
                 }
             });
+
+            return '<ul>' + html + '</ul>';
         };
 
-
-        fn(data);
-
-        return data;
+        return fn(data);
     }
 
     /**
@@ -214,8 +249,6 @@ export default class Mdjs {
 
         // 渲染代码
         renderer.code = (data, lang) => {
-            let html;
-
             data = highlight.highlightAuto(data).value;
 
             // 有语言时
@@ -223,16 +256,14 @@ export default class Mdjs {
 
                 // 超过3行有提示
                 if (data.split(/\n/).length >= 3) {
-                    html = `<pre><code class="hljs lang-${lang}" data-lang="${lang}">${data}</code></pre>`;
+                    let html = `<pre><code class="hljs lang-${lang}"><span class="hljs-lang-tips">${lang}</span>`;
+                    return html + `${data}</code></pre>`;
                 }
 
-                html = `<pre><code class="hljs lang-${lang}">${data}</code></pre>`;
-            }
-            else {
-                html = `<pre><code class="hljs">${data}</code></pre>`;
+                return `<pre><code class="hljs lang-${lang}">${data}</code></pre>`;
             }
 
-            return html;
+            return `<pre><code class="hljs">${data}</code></pre>`;
         };
 
         // md => html
@@ -256,6 +287,10 @@ export default class Mdjs {
      * @return {Object} this
      */
     run() {
+        // 委托目录浏览
+        this.express.use('/', serve_index(this.options.root, {
+            icons: true
+        }));
         this.express.listen(this.options.port);
         return this;
     }
@@ -378,7 +413,7 @@ export default class Mdjs {
         let file_basename = basename(dir);
 
         result = {
-            id: dir.replace(options.root, '') || '/',
+            uri: dir.replace(options.root, '') || '/',
             children: [],
             text: options.dir_alias[file_basename] || file_basename
         };
@@ -430,7 +465,7 @@ export default class Mdjs {
             else {
                 result.children.push({
                     text: this.get_markdown_title(file.filepath),
-                    id: file.filepath.replace(options.root, '').split(sep).join('\/')
+                    uri: file.filepath.replace(options.root, '').split(sep).join('\/')
                 });
             }
         });
@@ -475,7 +510,7 @@ export default class Mdjs {
 
         // 渲染md
         return res.render('markdown', {
-            nav_data: JSON.stringify(this.get_render_nav(parseUrl.pathname)),
+            nav_data: this.get_render_nav(parseUrl.pathname),
             markdown_data,
             title: `${this.get_markdown_title(filepath)} - ${this.options.name}`
         });
